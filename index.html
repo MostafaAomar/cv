@@ -82,6 +82,7 @@
     .field textarea { min-height: 77px; resize: vertical; line-height: 1.8; }
     .field input:focus, .field textarea:focus, select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
     .field input::placeholder, .field textarea::placeholder { color: #a79c93; }
+    .field-hint { display: block; margin-top: 4px; color: var(--muted); font-size: 10px; }
     .add-row { margin-top: 10px; }
     .add-section-card { padding: 15px 16px; }
     .section-chips { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 10px; }
@@ -168,7 +169,14 @@
     .cv-skill-level { color: #81766e; font-size: 10px; white-space: nowrap; }
     .percentage-field { position: relative; }
     .percentage-field input { padding-inline-end: 34px; }
-    .percentage-field::after { content: "%"; position: absolute; top: 50%; inset-inline-end: 11px; transform: translateY(-50%); color: var(--muted); font-size: 12px; font-weight: 700; pointer-events: none; }
+.percentage-field::after {
+  content: "%";
+  position: absolute;
+  top: 50%;
+  inset-inline-start: 11px;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
     .cv-bar { grid-column: 1 / -1; width: 100%; height: 5px; overflow: hidden; background: #eee8e2; border-radius: 5px; }
     .cv-bar span { display: block; height: 100%; background: var(--accent); border-radius: inherit; }
     .cv-language { display: flex; justify-content: space-between; gap: 6px; margin: 0 0 7px; font-size: 11px; }
@@ -265,7 +273,7 @@
     <div class="brand"><span class="brand-mark" aria-hidden="true">س</span><span>سيرة</span></div>
     <div class="top-actions">
       <button type="button" class="button" id="new-cv">＋ سيرة جديدة</button>
-      <button type="button" class="button button-primary" id="download-pdf" aria-label="تنزيل السيرة الذاتية بصيغة PDF" title="في نافذة الطباعة، اختر حفظ بصيغة PDF">↓ <span class="download-text">تنزيل PDF</span></button>
+      <button type="button" class="button button-primary" id="download-pdf" aria-label="تنزيل السيرة الذاتية بصيغة PDF" title="في نافذة الطباعة، اختر حفظ بصيغة PDF"> تنزيل بصيغة PDF <span class="download-text">تنزيل PDF</span></button>
     </div>
   </header>
   <main>
@@ -328,7 +336,7 @@
   <script>
     (() => {
       "use strict";
-      const STORAGE_KEY = "sira-cv-ar-v2";
+      const STORAGE_KEY = "sira-cv-ar-v3";
       const order = ["contact", "profile", "education", "experience", "skills", "languages", "projects", "certificates", "volunteering", "interests", "references"];
       const sidebarThemes = ["#24354f", "#34383d", "#28534c", "#593b46", "#606a79", "#e9e5e1"];
       const sections = {
@@ -342,7 +350,7 @@
         certificates: { title: "الدورات والشهادات", description: "أضف الدورات وورش العمل والتدريبات.", fields: ["course", "issuer", "start", "description"] },
         volunteering: { title: "العمل التطوعي", description: "أضف المساعدة المجتمعية والعمل دون أجر.", fields: ["activity", "organization", "location", "start", "end", "description"] },
         interests: { title: "الاهتمامات", description: "هوايات وأنشطة تودّ مشاركتها مع صاحب العمل.", fields: ["interest"] },
-        references: { title: "المعرّفون", description: "اختياري؛ يمكنك ترك القسم فارغاً.", fields: ["person", "relationship", "contact"] }
+        references: { title: "مراجع", description: "اختياري؛ يمكنك ترك القسم فارغاً.", fields: ["person", "relationship", "contact"] }
       };
       const labels = {
         name: "الاسم الكامل", headline: "المسمى المهني", email: "البريد الإلكتروني", phone: "رقم الهاتف",
@@ -355,29 +363,31 @@
         relationship: "الصفة أو المسمى الوظيفي", contact: "معلومات التواصل"
       };
       const placeholders = {
-        name: "مثال: سميرة حسن", headline: "مثال: مصممة جرافيك", email: "name@example.com",
-        phone: "مثال: ٠٥٠ ١٢٣ ٤٥٦٧", city: "مثال: جدة", website: "linkedin.com/in/name",
+        name: "مثال: مصطفى العمر", headline: "مثال: مدرس لغة إنجليزية", email: "name@example.com",
+        phone: "مثال: 944123456", city: "مثال: منبج، سوريا", website: "https://mostafaaomar.github.io/cv/",
         summary: "أنا شخص متحمس ومهتم بـ... أبحث عن فرصة أستطيع من خلالها...",
-        degree: "مثال: الثانوية العامة، الأحياء", school: "مثال: مدرسة الأمل الثانوية",
-        start: "مثال: ٢٠٢٢", end: "مثال: ٢٠٢٥", title: "مثال: مساعد مبيعات",
-        organization: "مثال: مكتبة الحي", location: "مثال: جدة",
+        degree: "مثال: الثانوية العامة، الأحياء", school: "مثال: ثانوية في منبج",
+        title: "مثال: مساعد مبيعات",
+        organization: "مثال: مكتبة في منبج", location: "مثال: منبج، سوريا",
         description: "اكتب عن مسؤولياتك أو إنجازاتك أو ما تعلمته.",
-        skill: "مثال: خدمة العملاء", level: "مثال: ٧٥", language: "مثال: العربية",
+        skill: "مثال: تدريس اللغة الإنجليزية", level: "مثال: ٧٥", language: "مثال: العربية",
         project: "مثال: حديقة المدرسة", course: "مثال: دورة الإسعافات الأولية",
-        issuer: "مثال: الهلال الأحمر", activity: "مثال: تنظيم فعالية",
-        interest: "مثال: القراءة", person: "مثال: أحمد علي",
+        issuer: "مثال: الهلال الأحمر العربي السوري", activity: "مثال: تنظيم فعالية في منبج",
+        interest: "مثال: القراءة", person: "مثال: أحمد العلي",
         relationship: "مثال: معلم سابق", contact: "بريد إلكتروني أو هاتف"
       };
       const compactFields = new Set(["email", "phone", "website", "start", "end", "level"]);
       const makeEntry = () => ({ id: globalThis.crypto?.randomUUID?.() || `${Date.now()}-${Math.random().toString(36).slice(2)}` });
       function blankData() {
-        return { color: "#a97957", sidebar: "#24354f", layout: "auto", photo: "", sections: [...order.slice(0, 6)], entries: Object.fromEntries(order.map(id => [id, [makeEntry()]])) };
+        const entries = Object.fromEntries(order.map(id => [id, [makeEntry()]]));
+        return { color: "#a97957", sidebar: "#24354f", layout: "auto", photo: "", sections: [...order.slice(0, 6)], entries };
       }
       function loadData() {
         try {
-          const saved = localStorage.getItem(STORAGE_KEY) || localStorage.getItem("cv-studio-data-v1");
-          if (!saved) return blankData();
-          const raw = JSON.parse(saved);
+          const saved = localStorage.getItem(STORAGE_KEY);
+          const legacySaved = localStorage.getItem("sira-cv-ar-v2") || localStorage.getItem("cv-studio-data-v1");
+          if (!saved && !legacySaved) return blankData();
+          const raw = JSON.parse(saved || legacySaved);
           const result = blankData();
           if (!raw || typeof raw !== "object") return result;
           if (typeof raw.color === "string" && /^#[0-9a-f]{6}$/i.test(raw.color)) result.color = raw.color;
@@ -395,6 +405,11 @@
               }
               return entry;
             });
+          }
+          if (!result.entries.contact.length) result.entries.contact.push(makeEntry());
+          if (!saved) {
+          //  result.entries.contact[0].name = "مصطفى العمر";
+            //result.entries.contact[0].headline = "مدرس لغة إنجليزية";
           }
           return result;
         } catch (error) {
@@ -434,17 +449,38 @@
       function hasExperience() {
         return (data.entries.experience || []).some(entry => isFilled(entry, "experience"));
       }
+      function numericMonthYear(value) {
+        const normalized = String(value)
+          .replace(/[٠-٩]/g, digit => String("٠١٢٣٤٥٦٧٨٩".indexOf(digit)))
+          .replace(/[۰-۹]/g, digit => String("۰۱۲۳۴۵۶۷۸۹".indexOf(digit)));
+        const entered = normalized.match(/^(\d{1,2})\s*([/.])\s*(\d{4})$/);
+        if (entered && Number(entered[1]) >= 1 && Number(entered[1]) <= 12) {
+          return `${entered[1].padStart(2, "0")}${entered[2]}${entered[3]}`;
+        }
+        const legacy = normalized.match(/^(\d{4})-(\d{2})(?:-\d{2})?$/);
+        if (legacy && Number(legacy[2]) >= 1 && Number(legacy[2]) <= 12) return `${legacy[2]}/${legacy[1]}`;
+        return "";
+      }
+      function monthValue(value) {
+        return numericMonthYear(value);
+      }
       function fieldControl(id, entry, field) {
         const long = field === "description" || field === "summary";
         const percentage = field === "level";
-        const type = field === "email" ? "email" : field === "website" ? "url" : percentage ? "text" : "text";
+        const dateField = field === "date" || field === "start" || field === "end";
+        const type = field === "email" ? "email" : field === "website" ? "url" : percentage || field === "phone" ? "number" : "text";
         const dir = compactFields.has(field) ? "ltr" : "auto";
-        const value = escapeHtml(entry[field] || "");
+        const rawValue = entry[field] || "";
+        const phoneValue = field === "phone"
+          ? rawValue.replace(/[٠-٩]/g, digit => String("٠١٢٣٤٥٦٧٨٩".indexOf(digit))).replace(/[۰-۹]/g, digit => String("۰۱۲۳۴۵۶۷۸۹".indexOf(digit))).replace(/\D/g, "")
+          : rawValue;
+        const value = escapeHtml(phoneValue);
+        const dateValue = escapeHtml(monthValue(rawValue));
         const control = long
           ? `<textarea data-section="${id}" data-entry="${entry.id}" data-field="${field}" maxlength="4000" dir="${dir}" placeholder="${escapeHtml(placeholders[field])}">${value}</textarea>`
           : percentage
-            ? `<div class="percentage-field"><input type="text" inputmode="decimal" data-section="${id}" data-entry="${entry.id}" data-field="${field}" maxlength="5" dir="ltr" aria-label="المستوى بالنسبة المئوية" placeholder="${escapeHtml(placeholders[field])}" value="${value}"></div>`
-            : `<input type="${type}" data-section="${id}" data-entry="${entry.id}" data-field="${field}" maxlength="250" dir="${dir}" placeholder="${escapeHtml(placeholders[field])}" value="${value}">`;
+            ? `<div class="percentage-field"><input type="number" inputmode="decimal" data-section="${id}" data-entry="${entry.id}" data-field="${field}" maxlength="5" dir="ltr" aria-label="المستوى بالنسبة المئوية" placeholder="${escapeHtml(placeholders[field])}" value="${value}"></div>`
+            : `<input type="${type}"${field === "phone" ? ' inputmode="numeric" step="1"' : ""} data-section="${id}" data-entry="${entry.id}" data-field="${field}"${type === "number" ? "" : ` maxlength="${dateField ? 7 : 250}"`} dir="${dir}" placeholder="${escapeHtml(dateField ? "مثال: ١٠/٢٠٢٦ أو ١٠.٢٠٢٦" : placeholders[field])}" value="${dateField ? (dateValue || value) : value}">${dateField && rawValue && !dateValue ? `<span class="field-hint">القيمة المحفوظة: ${escapeHtml(rawValue)}</span>` : ""}`;
         return `<div class="field${long ? " field-full" : ""}"><label>${escapeHtml(labels[field])}${control}</label></div>`;
       }
       function renderEditor() {
@@ -505,7 +541,7 @@
         root.setProperty("--accent-glow", `rgba(${channels.join(",")}, .16)`);
       }
       function dates(entry) {
-        return [entry.start, entry.end].filter(Boolean).map(escapeHtml).join(" — ");
+        return [entry.start, entry.end].filter(Boolean).map(value => monthValue(value) || value).join(" — ");
       }
       function cvEntry(id, entry) {
         if (id === "skills") {
@@ -629,6 +665,8 @@
           entry[field.dataset.field] = field.value;
           if (field.dataset.field === "email" && field.value && field.validity.typeMismatch) {
             field.setCustomValidity("أدخل بريداً إلكترونياً صحيحاً.");
+          } else if (["start", "end", "date"].includes(field.dataset.field) && field.value && !numericMonthYear(field.value)) {
+            field.setCustomValidity("أدخل الشهر والسنة بهذا الشكل: ١٠/٢٠٢٦ أو ١٠.٢٠٢٦.");
           }
         }
         renderPreview();
