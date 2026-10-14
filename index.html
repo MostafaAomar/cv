@@ -29,24 +29,39 @@
       font-synthesis: none;
     }
     * { box-sizing: border-box; }
-    body { margin: 0; color: var(--ink); background: var(--page); }
+    body { margin: 0; color: var(--ink); background: var(--page); direction: rtl; text-align: right; }
     button, input, textarea, select { font: inherit; }
     button { cursor: pointer; }
     .topbar {
-      min-height: 70px; display: flex; align-items: center; justify-content: space-between;
-      gap: 16px; padding: 10px clamp(16px, 5vw, 72px); background: #fff; border-bottom: 1px solid var(--line);
+      min-height: 76px; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center;
+      gap: 16px; padding: 10px clamp(16px, 5vw, 72px); color: #fff;
+      background: linear-gradient(115deg, #25384d 0%, #2d6389 52%, #3498db 100%);
+      box-shadow: 0 5px 18px rgba(24, 52, 78, .22); position: sticky; top: 0; z-index: 100;
+      direction: ltr;
     }
-    .brand { display: flex; align-items: center; gap: 11px; font-size: 20px; font-weight: 800; }
-    .brand-mark { display: grid; width: 38px; height: 38px; place-items: center; color: #fff; background: var(--accent); border-radius: 13px 13px 13px 4px; font-family: "Amiri", serif; font-size: 25px; }
-    .top-actions { display: flex; align-items: center; gap: 9px; }
+    .site-brand { grid-column: 2; grid-row: 1; justify-self: center; display: inline-flex; align-items: center; gap: 11px; color: #fff; direction: ltr; font-size: 20px; font-weight: 800; text-decoration: none; white-space: nowrap; }
+    .site-brand img { width: 50px; height: 50px; flex: 0 0 auto; border: 2px solid #fff; border-radius: 50%; box-shadow: 0 0 10px rgba(255, 255, 255, .4); }
+    .site-brand span { background: linear-gradient(45deg, #8bd5ff, #d7b7ff, #f4c95d); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .project-nav {
+      display: flex; justify-content: center; gap: 5px; padding: 8px 12px; overflow-x: auto;
+      background: #0069d9; box-shadow: 0 2px 5px rgba(0, 0, 0, .1);
+    }
+    .project-nav a {
+      min-height: 48px; display: inline-flex; align-items: center; justify-content: center;
+      padding: 10px 19px; border-bottom: 4px solid transparent; color: rgba(255, 255, 255, .9);
+      font-size: 14px; font-weight: 700; text-decoration: none; white-space: nowrap;
+    }
+    .project-nav a:hover, .project-nav a[aria-current="page"] { color: #fff; background: rgba(0, 0, 0, .1); }
+    .project-nav a[aria-current="page"] { border-bottom-color: #fff; }
+    .top-actions { grid-column: 3; grid-row: 1; justify-self: end; display: flex; align-items: center; gap: 9px; direction: rtl; }
     .button {
       min-height: 42px; display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-      padding: 8px 15px; color: var(--ink); background: #fff; border: 1px solid var(--line);
-      border-radius: 10px; font-size: 13px; font-weight: 700; transition: .16s ease;
+      padding: 8px 15px; color: var(--ink); background: rgba(255, 255, 255, .96); border: 1px solid rgba(255, 255, 255, .65);
+      border-radius: 12px; font-size: 13px; font-weight: 700; transition: .16s ease; box-shadow: 0 3px 10px rgba(19, 44, 67, .12);
     }
-    .button:hover { border-color: var(--accent); transform: translateY(-1px); }
-    .button-primary { color: #fff; background: var(--accent-deep); border-color: var(--accent-deep); }
-    .button-primary:hover { color: #fff; background: #4e3525; }
+    .button:hover { border-color: #fff; transform: translateY(-1px); box-shadow: 0 6px 14px rgba(19, 44, 67, .2); }
+    .button-primary { color: #fff; background: #075fb2; border-color: rgba(255, 255, 255, .45); }
+    .button-primary:hover { color: #fff; background: #064f94; }
     .button-small { min-height: 33px; padding: 5px 10px; font-size: 12px; }
     .button-danger { color: var(--danger); }
     .intro { width: min(1440px, 100%); margin: auto; padding: 31px clamp(16px, 5vw, 72px) 22px; }
@@ -61,7 +76,12 @@
     .saved::before { content: ""; display: inline-block; width: 7px; height: 7px; margin-inline-end: 6px; vertical-align: 1px; background: #4e9a72; border-radius: 50%; }
     .card { margin-bottom: 12px; padding: 16px; background: #fff; border: 1px solid var(--line); border-radius: 14px; box-shadow: 0 3px 13px #49372808; }
     .section-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+    .section-heading-copy { min-width: 0; flex: 1; }
     .section-heading h3, .add-heading { margin: 0; font-size: 15px; font-weight: 800; }
+    .section-toggle { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 0; color: inherit; background: transparent; border: 0; text-align: right; cursor: pointer; font-size: inherit; font-weight: inherit; }
+    .section-toggle-indicator { width: 27px; height: 27px; flex: 0 0 auto; display: grid; place-items: center; color: var(--accent-deep); background: var(--accent-pale); border-radius: 50%; font-size: 16px; transition: transform .18s ease; }
+    .section-toggle[aria-expanded="true"] .section-toggle-indicator { transform: rotate(180deg); }
+    .section-toggle:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; border-radius: 4px; }
     .description { margin: 4px 0 0; color: var(--muted); font-size: 11.5px; line-height: 1.7; }
     .section-actions { display: flex; flex-shrink: 0; gap: 4px; }
     .icon-button { width: 31px; height: 31px; display: grid; place-items: center; padding: 0; color: var(--muted); background: white; border: 1px solid var(--line); border-radius: 8px; font-size: 14px; }
@@ -78,15 +98,11 @@
     .field input, .field textarea {
       display: block; width: 100%; min-height: 39px; padding: 8px 10px; color: var(--ink);
       background: #fff; border: 1px solid #e3d9d1; border-radius: 8px; outline: none; font-size: 12px;
+      text-align: right;
     }
     .field textarea { min-height: 77px; resize: vertical; line-height: 1.8; }
     .field input:focus, .field textarea:focus, select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
     .field input::placeholder, .field textarea::placeholder { color: #a79c93; }
-    .field-hint { display: block; margin-top: 4px; color: var(--muted); font-size: 10px; }
-    .photo-controls { display: flex; align-items: center; gap: 10px; }
-    .photo-thumb { width: 56px; height: 56px; flex: 0 0 56px; object-fit: cover; border: 1px solid var(--line); border-radius: 9px; }
-    .photo-placeholder { display: grid; place-items: center; color: var(--muted); background: #f5f1ed; font-size: 21px; }
-    .photo-controls-info { min-width: 0; flex: 1; }
     .add-row { margin-top: 10px; }
     .add-section-card { padding: 15px 16px; }
     .section-chips { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 10px; }
@@ -112,6 +128,7 @@
       width: 100%; min-height: 650px; padding: 9px; overflow-wrap: normal; word-break: normal;
       color: #202936; background: #fff; border: 1px solid #ddd1c7; border-radius: 5px;
       box-shadow: 0 5px 20px #34231514; font-family: Tahoma, "Noto Sans Arabic", "Cairo", sans-serif;
+      direction: rtl; text-align: right;
     }
     .cv-inner {
       min-height: 630px; display: grid; grid-template-columns: 36% 1fr; overflow: hidden;
@@ -173,14 +190,7 @@
     .cv-skill-level { color: #81766e; font-size: 10px; white-space: nowrap; }
     .percentage-field { position: relative; }
     .percentage-field input { padding-inline-end: 34px; }
-.percentage-field::after {
-  content: "%";
-  position: absolute;
-  top: 50%;
-  inset-inline-start: 11px;
-  transform: translateY(-50%);
-  pointer-events: none;
-}
+    .percentage-field::after { content: "%"; position: absolute; top: 50%; inset-inline-end: 11px; transform: translateY(-50%); color: var(--muted); font-size: 12px; font-weight: 700; pointer-events: none; }
     .cv-bar { grid-column: 1 / -1; width: 100%; height: 5px; overflow: hidden; background: #eee8e2; border-radius: 5px; }
     .cv-bar span { display: block; height: 100%; background: var(--accent); border-radius: inherit; }
     .cv-language { display: flex; justify-content: space-between; gap: 6px; margin: 0 0 7px; font-size: 11px; }
@@ -208,26 +218,23 @@
       .cv-main { padding: 19px 16px; }
     }
     @media (max-width: 780px) {
-      .workspace { grid-template-columns: minmax(0, 1fr); }
-      .preview-panel { position: static; grid-row: 2; }
+      .workspace { grid-template-columns: 1fr; }
+      .preview-panel { position: static; grid-row: 1; }
       .cv-paper { max-width: 600px; margin: auto; }
-      .editor-panel { grid-row: 1; }
+      .editor-panel { grid-row: 2; }
     }
-    @media (max-width: 480px) {
-      .topbar { min-height: 62px; padding: 9px 12px; }
-      .brand { font-size: 17px; }
-      .top-actions { gap: 6px; }
-      .button { min-height: 40px; padding-inline: 9px; }
-      .intro { padding: 21px 14px 16px; }
-      .workspace { width: 100%; padding: 0 10px 28px; gap: 18px; }
-      .card { padding: 12px; }
-      .section-heading { gap: 8px; }
-      .section-heading h3, .add-heading { font-size: 14px; }
-      .preview-toolbar { align-items: center; }
-      .preview-controls { flex-wrap: nowrap; justify-content: flex-start; }
-      .layout-select { max-width: 155px; }
-      .color-box { flex-wrap: wrap; gap: 8px; padding: 9px; }
-      .palette { flex-wrap: wrap; gap: 8px; }
+    @media (max-width: 640px) {
+      .topbar { min-height: 112px; grid-template-columns: 1fr; grid-template-rows: auto auto; justify-items: center; gap: 8px; padding: 9px 10px; }
+      .site-brand { grid-column: 1; grid-row: 1; gap: 8px; font-size: 16px; }
+      .site-brand img { width: 42px; height: 42px; }
+      .top-actions { grid-column: 1; grid-row: 2; justify-self: center; gap: 7px; }
+      .top-actions .button { min-height: 36px; padding-inline: 10px; }
+      .project-nav { justify-content: flex-start; }
+      .project-nav a { padding-inline: 13px; font-size: 12px; }
+      .intro { padding-top: 23px; }
+      .workspace { padding-inline: 12px; }
+      .preview-toolbar { align-items: flex-start; }
+      .preview-controls { flex-wrap: wrap; justify-content: flex-end; }
       .download-text { display: none; }
       .paper-stage { padding: 7px; }
       .cv-paper { padding: 6px; min-height: 520px; }
@@ -246,29 +253,20 @@
       .cv-item-title { font-size: 10px; }
       .cv-item-meta, .cv-item-description, .cv-sidebar-contact li { font-size: 9px; }
       .cv-skill, .cv-language { font-size: 9px; }
-      .field-grid { grid-template-columns: minmax(0, 1fr); gap: 9px; }
-      .field-full { grid-column: auto; }
-      .photo-controls { flex-wrap: wrap; }
-      .photo-controls-info { flex-basis: calc(100% - 70px); }
-      .photo-controls .button { flex: 1 1 auto; }
     }
     @media print {
       @page { size: A4; margin: 0; }
       html, body { width: 210mm; min-height: 297mm; margin: 0 !important; background: #fff !important; }
       body * { visibility: hidden !important; }
       #cv-paper, #cv-paper * { visibility: visible !important; }
-      .topbar, .intro, .editor-panel, .preview-toolbar, .color-box, .recommendation, .status { display: none !important; }
-      .workspace { display: block !important; }
-      .preview-panel { position: static !important; }
       #cv-paper {
-        position: absolute !important; top: 0 !important; left: 0 !important; width: 210mm !important; max-width: none !important;
+        position: absolute !important; inset: 0 auto auto 0 !important; width: 210mm !important;
         min-height: 297mm !important; margin: 0 !important; padding: 8mm !important;
         border: 0 !important; border-radius: 0 !important; box-shadow: none !important;
         overflow: visible !important; font-family: Tahoma, "Noto Sans Arabic", "Cairo", sans-serif !important;
         -webkit-print-color-adjust: exact; print-color-adjust: exact;
       }
-      .paper-stage { padding: 0 !important; background: transparent !important; border: 0 !important; }
-      .cv-inner { min-height: 281mm !important; grid-template-columns: 36% 1fr !important; direction: rtl !important; }
+      .cv-inner { min-height: 0 !important; grid-template-columns: 36% 1fr !important; direction: rtl !important; }
       .cv-paper { min-height: 0 !important; }
       .cv-sidebar { gap: 5mm; padding: 7mm 5mm; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
       .cv-main { padding: 8mm 9mm; }
@@ -285,12 +283,20 @@
 </head>
 <body>
   <header class="topbar">
-    <div class="brand"><span class="brand-mark" aria-hidden="true">س</span><span>سيرة</span></div>
+    <a class="site-brand" href="../school_project/index.html" title="الصفحة الرئيسية">
+      <img src="../school_project/images/pagelogo.png" alt="">
+      <span>منصة التعليم السورية</span>
+    </a>
     <div class="top-actions">
       <button type="button" class="button" id="new-cv">＋ سيرة جديدة</button>
-      <button type="button" class="button button-primary" id="download-pdf" aria-label="تنزيل السيرة الذاتية بصيغة PDF" title="في نافذة الطباعة، اختر حفظ بصيغة PDF"> تنزيل بصيغة PDF <span class="download-text"></span></button>
+      <button type="button" class="button button-primary" id="download-pdf" aria-label="تنزيل السيرة الذاتية بصيغة PDF" title="في نافذة الطباعة، اختر حفظ بصيغة PDF">تنزيل السيرة ↓<span class="download-text"></span></button>
     </div>
   </header>
+  <nav class="project-nav" aria-label="المشاريع">
+    <a href="../school_project/index.html">المواد الدراسية</a>
+    <a href="../uni/index.html">أسئلة الجامعة</a>
+    <a href="./index.html" aria-current="page">إنشاء السيرة الذاتية</a>
+  </nav>
   <main>
     <section class="intro">
       <p class="eyebrow">خطوتك القادمة تبدأ هنا</p>
@@ -339,7 +345,7 @@
             <button class="sidebar-swatch" type="button" data-sidebar="#593b46" style="background:#593b46" aria-label="عنابي" aria-pressed="false"></button>
             <button class="sidebar-swatch" type="button" data-sidebar="#606a79" style="background:#606a79" aria-label="رمادي مزرق" aria-pressed="false"></button>
             <button class="sidebar-swatch" type="button" data-sidebar="#e9e5e1" style="background:#e9e5e1" aria-label="رمادي فاتح" aria-pressed="false"></button>
-          </div>
+          </div> 
         </div>
         <p class="recommendation" id="recommendation" aria-live="polite"></p>
         <div class="paper-stage"><article id="cv-paper" class="cv-paper" dir="rtl" lang="ar" aria-label="معاينة السيرة الذاتية"></article></div>
@@ -351,9 +357,10 @@
   <script>
     (() => {
       "use strict";
-      const STORAGE_KEY = "sira-cv-ar-v4";
+      const STORAGE_KEY = "sira-cv-ar-v2";
       const order = ["contact", "profile", "education", "experience", "skills", "languages", "projects", "certificates", "volunteering", "interests", "references"];
       const sidebarThemes = ["#24354f", "#34383d", "#28534c", "#593b46", "#606a79", "#e9e5e1"];
+      const openSections = new Set(["contact"]);
       const sections = {
         contact: { title: "معلومات التواصل", description: "أضف اسمك ووسائل التواصل التي تفضّلها.", single: true, fields: ["name", "headline", "email", "phone", "city", "website"] },
         profile: { title: "نبذة عني", description: "جمل قصيرة توضّح ما تجيده وما تبحث عنه.", single: true, fields: ["summary"] },
@@ -365,19 +372,19 @@
         certificates: { title: "الدورات والشهادات", description: "أضف الدورات وورش العمل والتدريبات.", fields: ["course", "issuer", "start", "description"] },
         volunteering: { title: "العمل التطوعي", description: "أضف المساعدة المجتمعية والعمل دون أجر.", fields: ["activity", "organization", "location", "start", "end", "description"] },
         interests: { title: "الاهتمامات", description: "هوايات وأنشطة تودّ مشاركتها مع صاحب العمل.", fields: ["interest"] },
-        references: { title: "مراجع", description: "اختياري؛ يمكنك ترك القسم فارغاً.", fields: ["person", "relationship", "contact"] }
+        references: { title: "المعرّفون", description: "اختياري؛ يمكنك ترك القسم فارغاً.", fields: ["person", "relationship", "contact"] }
       };
       const labels = {
         name: "الاسم الكامل", headline: "المسمى المهني", email: "البريد الإلكتروني", phone: "رقم الهاتف",
-        city: "المدينة أو العنوان", website: "موقع إلكتروني، إذا كان لديك واحد", summary: "نبذة قصيرة",
-        degree: "الشهادة التي حصلت عليها", school: "مدرسة أو جامعة أو معهد", start: "من", end: "إلى",
+        city: "المدينة أو العنوان", website: "الموقع أو لينكدإن", summary: "نبذة قصيرة",
+        degree: "المؤهل أو التخصص", school: "المدرسة أو المؤسسة", start: "من", end: "إلى",
         title: "المسمى الوظيفي", organization: "الشركة أو المؤسسة", location: "الموقع",
         description: "التفاصيل أو ما تعلمته", skill: "المهارة", level: "المستوى (%)",
         language: "اللغة", project: "اسم المشروع", course: "الدورة أو الشهادة", issuer: "الجهة المانحة",
         activity: "الدور أو النشاط", interest: "الاهتمام أو الهواية", person: "الاسم",
         relationship: "الصفة أو المسمى الوظيفي", contact: "معلومات التواصل"
       };
-      const placeholders = {
+       const placeholders = {
         name: "مثال: مصطفى العمر", headline: "مثال: مدرس لغة إنجليزية", email: "name@example.com",
         phone: "مثال: 944123456", city: "مثال: منبج، سوريا", website: "https://mostafaaomar.github.io/cv/",
         summary: "...... أنا متحمس جداً للعمل كمعلم في مدرستكم، ولدي خبرة في مجال التدريس.",
@@ -391,18 +398,15 @@
         interest: "مثال: القراءة", person: "مثال: أحمد العلي",
         relationship: "مثال: معلم سابق", contact: "بريد إلكتروني أو هاتف"
       };
-      const compactFields = new Set(["email", "phone", "website", "start", "end", "level"]);
       const makeEntry = () => ({ id: globalThis.crypto?.randomUUID?.() || `${Date.now()}-${Math.random().toString(36).slice(2)}` });
       function blankData() {
-        const entries = Object.fromEntries(order.map(id => [id, [makeEntry()]]));
-        return { color: "#a97957", sidebar: "#24354f", layout: "auto", photo: "", sections: ["contact"], entries };
+        return { color: "#a97957", sidebar: "#24354f", layout: "auto", photo: "", sections: [...order.slice(0, 6)], entries: Object.fromEntries(order.map(id => [id, [makeEntry()]])) };
       }
       function loadData() {
         try {
-          const saved = localStorage.getItem(STORAGE_KEY);
-          const legacySaved = localStorage.getItem("sira-cv-ar-v3") || localStorage.getItem("sira-cv-ar-v2") || localStorage.getItem("cv-studio-data-v1");
-          if (!saved && !legacySaved) return blankData();
-          const raw = JSON.parse(saved || legacySaved);
+          const saved = localStorage.getItem(STORAGE_KEY) || localStorage.getItem("cv-studio-data-v1");
+          if (!saved) return blankData();
+          const raw = JSON.parse(saved);
           const result = blankData();
           if (!raw || typeof raw !== "object") return result;
           if (typeof raw.color === "string" && /^#[0-9a-f]{6}$/i.test(raw.color)) result.color = raw.color;
@@ -410,7 +414,7 @@
           if (["auto", "classic", "minimal"].includes(raw.layout)) result.layout = raw.layout;
           else if (raw.layout === "modern") result.layout = "classic";
           if (typeof raw.photo === "string") result.photo = raw.photo;
-          if (saved && Array.isArray(raw.sections)) result.sections = raw.sections.filter((id, i, all) => id !== "references" && sections[id] && all.indexOf(id) === i);
+          if (Array.isArray(raw.sections)) result.sections = raw.sections.filter((id, i, all) => sections[id] && all.indexOf(id) === i);
           if (raw.entries && typeof raw.entries === "object") for (const id of order) {
             if (!Array.isArray(raw.entries[id])) continue;
             result.entries[id] = raw.entries[id].filter(item => item && typeof item === "object").map(item => {
@@ -420,11 +424,6 @@
               }
               return entry;
             });
-          }
-          if (!result.entries.contact.length) result.entries.contact.push(makeEntry());
-          if (!saved) {
-          //  result.entries.contact[0].name = "مصطفى العمر";
-            //result.entries.contact[0].headline = "مدرس لغة إنجليزية";
           }
           return result;
         } catch (error) {
@@ -464,43 +463,24 @@
       function hasExperience() {
         return (data.entries.experience || []).some(entry => isFilled(entry, "experience"));
       }
-      function numericMonthYear(value) {
-        const normalized = String(value)
-          .replace(/[٠-٩]/g, digit => String("٠١٢٣٤٥٦٧٨٩".indexOf(digit)))
-          .replace(/[۰-۹]/g, digit => String("۰۱۲۳۴۵۶۷۸۹".indexOf(digit)));
-        const entered = normalized.match(/^(\d{1,2})\s*([/.])\s*(\d{4})$/);
-        if (entered && Number(entered[1]) >= 1 && Number(entered[1]) <= 12) {
-          return `${entered[1].padStart(2, "0")}${entered[2]}${entered[3]}`;
-        }
-        const legacy = normalized.match(/^(\d{4})-(\d{2})(?:-\d{2})?$/);
-        if (legacy && Number(legacy[2]) >= 1 && Number(legacy[2]) <= 12) return `${legacy[2]}/${legacy[1]}`;
-        return "";
-      }
-      function monthValue(value) {
-        return numericMonthYear(value);
-      }
       function fieldControl(id, entry, field) {
         const long = field === "description" || field === "summary";
         const percentage = field === "level";
-        const dateField = field === "date" || field === "start" || field === "end";
-        const type = field === "email" ? "email" : field === "website" ? "url" : percentage || field === "phone" ? "number" : "text";
-        const dir = compactFields.has(field) ? "ltr" : "auto";
-        const rawValue = entry[field] || "";
-        const phoneValue = field === "phone"
-          ? rawValue.replace(/[٠-٩]/g, digit => String("٠١٢٣٤٥٦٧٨٩".indexOf(digit))).replace(/[۰-۹]/g, digit => String("۰۱۲۳۴۵۶۷۸۹".indexOf(digit))).replace(/\D/g, "")
-          : rawValue;
-        const value = escapeHtml(phoneValue);
-        const dateValue = escapeHtml(monthValue(rawValue));
+        const type = field === "email" ? "email" : field === "website" ? "url" : percentage ? "text" : "text";
+        const dir = "rtl";
+        const value = escapeHtml(entry[field] || "");
         const control = long
           ? `<textarea data-section="${id}" data-entry="${entry.id}" data-field="${field}" maxlength="4000" dir="${dir}" placeholder="${escapeHtml(placeholders[field])}">${value}</textarea>`
           : percentage
-            ? `<div class="percentage-field"><input type="number" inputmode="decimal" data-section="${id}" data-entry="${entry.id}" data-field="${field}" maxlength="5" dir="ltr" aria-label="المستوى بالنسبة المئوية" placeholder="${escapeHtml(placeholders[field])}" value="${value}"></div>`
-            : `<input type="${type}"${field === "phone" ? ' inputmode="numeric" step="1"' : ""} data-section="${id}" data-entry="${entry.id}" data-field="${field}"${type === "number" ? "" : ` maxlength="${dateField ? 7 : 250}"`} dir="${dir}" placeholder="${escapeHtml(dateField ? "مثال: ١٠/٢٠٢٦ أو ١٠.٢٠٢٦" : placeholders[field])}" value="${dateField ? (dateValue || value) : value}">${dateField && rawValue && !dateValue ? `<span class="field-hint">القيمة المحفوظة: ${escapeHtml(rawValue)}</span>` : ""}`;
+            ? `<div class="percentage-field"><input type="text" inputmode="decimal" data-section="${id}" data-entry="${entry.id}" data-field="${field}" maxlength="5" dir="ltr" aria-label="المستوى بالنسبة المئوية" placeholder="${escapeHtml(placeholders[field])}" value="${value}"></div>`
+            : `<input type="${type}" data-section="${id}" data-entry="${entry.id}" data-field="${field}" maxlength="250" dir="${dir}" placeholder="${escapeHtml(placeholders[field])}" value="${value}">`;
         return `<div class="field${long ? " field-full" : ""}"><label>${escapeHtml(labels[field])}${control}</label></div>`;
       }
       function renderEditor() {
-        editor.innerHTML = data.sections.map((id, sectionIndex) => {
+        const visibleSections = data.sections.filter(id => id === "contact" || openSections.has(id));
+        editor.innerHTML = visibleSections.map(id => {
           const definition = sections[id];
+          const sectionIndex = data.sections.indexOf(id);
           const entries = data.entries[id] || [];
           const entryMarkup = entries.map((entry, entryIndex) => `
             <div class="entry" data-entry-card="${entry.id}">
@@ -513,29 +493,36 @@
             </div>`).join("");
           return `<section class="card" data-section-card="${id}">
             <div class="section-heading">
-              <div><h3>${definition.title}</h3><p class="description">${definition.description}</p></div>
+              <div class="section-heading-copy">
+                <h3><button type="button" class="section-toggle" data-section-toggle="${id}" aria-expanded="${openSections.has(id)}" aria-controls="section-content-${id}">
+                  <span>${definition.title}</span><span class="section-toggle-indicator" aria-hidden="true">⌄</span>
+                </button></h3>
+                <p class="description">${definition.description}</p>
+              </div>
               <span class="section-actions">
                 <button type="button" class="icon-button" data-action="section-up" data-section="${id}" aria-label="تحريك القسم للأعلى" title="تحريك للأعلى" ${sectionIndex === 0 ? "disabled" : ""}>↑</button>
                 <button type="button" class="icon-button" data-action="section-down" data-section="${id}" aria-label="تحريك القسم للأسفل" title="تحريك للأسفل" ${sectionIndex === data.sections.length - 1 ? "disabled" : ""}>↓</button>
                 <button type="button" class="icon-button button-danger" data-action="remove-section" data-section="${id}" aria-label="حذف القسم" title="حذف القسم">×</button>
               </span>
             </div>
-            ${id === "contact" ? photoControls() : ""}
-            ${entryMarkup}
-            ${definition.single ? "" : `<div class="add-row"><button type="button" class="button button-small" data-action="add-entry" data-section="${id}">＋ أضف ${definition.title}</button></div>`}
-            ${id === "experience" ? `<p class="tip">${hasExperience() ? "أضف مسؤولياتك وإنجازاتك؛ والتعليم والمشاريع يكملان سيرتك." : "ليس لديك خبرة عمل بعد؟ لا بأس. قدّم التعليم والمهارات والمشاريع أو التطوع؛ فهي خبرات مهمة."}</p>` : ""}
+            <div id="section-content-${id}"${openSections.has(id) ? "" : " hidden"}>
+              ${id === "contact" ? photoControls() : ""}
+              ${entryMarkup}
+              ${definition.single ? "" : `<div class="add-row"><button type="button" class="button button-small" data-action="add-entry" data-section="${id}">＋ أضف ${definition.title}</button></div>`}
+              ${id === "experience" ? `<p class="tip">${hasExperience() ? "أضف مسؤولياتك وإنجازاتك؛ والتعليم والمشاريع يكملان سيرتك." : "ليس لديك خبرة عمل بعد؟ لا بأس. قدّم التعليم والمهارات والمشاريع أو التطوع؛ فهي خبرات مهمة."}</p>` : ""}
+            </div>
           </section>`;
         }).join("");
-        document.getElementById("available-sections").innerHTML = order.filter(id => id !== "references" && !data.sections.includes(id))
+        document.getElementById("available-sections").innerHTML = order.filter(id => !openSections.has(id))
           .map(id => `<button type="button" class="chip" data-action="add-section" data-section="${id}">＋ ${sections[id].title}</button>`).join("")
-          || `<span class="description">أضفت كل الأقسام المتاحة.</span>`;
+          || `<span class="description">أظهرت كل الأقسام.</span>`;
       }
       function photoControls() {
         const photo = data.photo
           ? `<img class="photo-thumb" src="${escapeHtml(data.photo)}" alt="معاينة الصورة الشخصية">`
           : `<span class="photo-thumb photo-placeholder" aria-hidden="true">＋</span>`;
-        return `<div class="entry photo-controls">
-          ${photo}<div class="photo-controls-info"><strong style="font-size:11px">الصورة الشخصية</strong><p class="description">اختيارية · JPG أو PNG أو WebP · حتى ٥ ميغابايت</p></div>
+        return `<div class="entry" style="display:flex;align-items:center;gap:10px">
+          ${photo}<div style="flex:1"><strong style="font-size:11px">الصورة الشخصية</strong><p class="description">اختيارية · JPG أو PNG أو WebP · حتى ٥ ميغابايت</p></div>
           <button type="button" class="button button-small" data-action="choose-photo">اختر صورة</button>
           ${data.photo ? `<button type="button" class="button button-small button-danger" data-action="remove-photo">حذف</button>` : ""}
         </div>`;
@@ -556,7 +543,7 @@
         root.setProperty("--accent-glow", `rgba(${channels.join(",")}, .16)`);
       }
       function dates(entry) {
-        return [entry.start, entry.end].filter(Boolean).map(value => monthValue(value) || value).join(" — ");
+        return [entry.start, entry.end].filter(Boolean).map(escapeHtml).join(" — ");
       }
       function cvEntry(id, entry) {
         if (id === "skills") {
@@ -568,11 +555,11 @@
           return `<li class="cv-language"><span>${escapeHtml(entry.language)}</span>${percent === null ? "" : `<span class="cv-skill-level">${percent}%</span><span class="cv-bar"><span style="width:${percent}%"></span></span>`}</li>`;
         }
         if (id === "interests") return `<span class="cv-interest">${escapeHtml(entry.interest)}</span>`;
-        // if (id === "references") {
-        //   const name = (entry.person || "").trim() || "متاح عند الطلب";
-        //   const meta = [entry.relationship, entry.contact].filter(Boolean).map(escapeHtml).join(" · ");
-        //   return `<li class="cv-entry"><p class="cv-item-title">${escapeHtml(name)}</p>${meta ? `<p class="cv-item-meta">${meta}</p>` : ""}</li>`;
-        // }
+        if (id === "references") {
+          const name = (entry.person || "").trim() || "متاح عند الطلب";
+          const meta = [entry.relationship, entry.contact].filter(Boolean).map(escapeHtml).join(" · ");
+          return `<li class="cv-entry"><p class="cv-item-title">${escapeHtml(name)}</p>${meta ? `<p class="cv-item-meta">${meta}</p>` : ""}</li>`;
+        }
         const titleField = { education: "degree", experience: "title", projects: "project", certificates: "course", volunteering: "activity" }[id];
         const organizationField = { education: "school", experience: "organization", certificates: "issuer", volunteering: "organization" }[id];
         const title = (entry[titleField] || "").trim();
@@ -649,9 +636,11 @@
           paper.innerHTML = `<div class="empty-preview">ستظهر سيرتك هنا فور إدخال المعلومات.<br>لا تحتاج إلى تعبئة كل الأقسام.</div>`;
           return;
         }
-        const photo = contactVisible && data.photo
-          ? `<div class="cv-photo-wrap"><img class="cv-photo" src="${escapeHtml(data.photo)}" alt=""></div>`
-          : "";
+        const initials = (name || "س").trim().slice(0, 1);
+        const image = data.photo
+          ? `<img class="cv-photo" src="${escapeHtml(data.photo)}" alt="">`
+          : `<span class="cv-photo-placeholder" aria-hidden="true">${escapeHtml(initials)}</span>`;
+        const photo = contactVisible ? `<div class="cv-photo-wrap">${image}</div>` : "";
         const sidebar = `<aside class="cv-sidebar">${photo}${contactSection(contact)}${sideIds.map(id => cvSection(id)).join("")}</aside>`;
         const profileSection = profile ? `<section class="cv-section" data-cv-section="profile"><h2 class="cv-section-title">نبذة مهنية</h2><p class="cv-summary">${escapeHtml(profile)}</p></section>` : "";
         const header = name || headline ? `<header class="cv-header">${name ? `<h1 class="cv-name">${escapeHtml(name)}</h1>` : ""}${headline ? `<p class="cv-headline">${escapeHtml(headline)}</p>` : ""}</header>` : "";
@@ -678,8 +667,6 @@
           entry[field.dataset.field] = field.value;
           if (field.dataset.field === "email" && field.value && field.validity.typeMismatch) {
             field.setCustomValidity("أدخل بريداً إلكترونياً صحيحاً.");
-          } else if (["start", "end", "date"].includes(field.dataset.field) && field.value && !numericMonthYear(field.value)) {
-            field.setCustomValidity("أدخل الشهر والسنة بهذا الشكل: ١٠/٢٠٢٦ أو ١٠.٢٠٢٦.");
           }
         }
         renderPreview();
@@ -690,18 +677,30 @@
         save();
       });
       document.querySelector(".editor-panel").addEventListener("click", event => {
+        const toggle = event.target.closest("button[data-section-toggle]");
+        if (toggle) {
+          const id = toggle.dataset.sectionToggle;
+          if (openSections.has(id)) openSections.delete(id);
+          else openSections.add(id);
+          renderEditor();
+          editor.querySelector(`[data-section-toggle="${id}"]`).focus();
+          return;
+        }
         const button = event.target.closest("button[data-action]");
         if (!button) return;
         const { action, section: id, entry: entryId } = button.dataset;
         if (action === "choose-photo") { photoInput.click(); return; }
         if (action === "remove-photo") { data.photo = ""; refresh(); return; }
         if (action === "add-section") {
-          if (!data.sections.includes(id)) {
-            data.sections.push(id);
-            if (!data.entries[id]?.length) data.entries[id] = [makeEntry()];
-          }
+          if (!data.sections.includes(id)) data.sections.push(id);
+          if (!data.entries[id]?.length) data.entries[id] = [makeEntry()];
+          openSections.add(id);
+          refresh();
+          editor.querySelector(`[data-section-toggle="${id}"]`).focus();
+          return;
         } else if (action === "remove-section") {
           data.sections = data.sections.filter(section => section !== id);
+          openSections.delete(id);
         } else if (action === "add-entry") {
           data.entries[id].push(makeEntry());
         } else if (action === "remove-entry") {
@@ -769,6 +768,8 @@
       document.getElementById("new-cv").addEventListener("click", () => {
         if (!confirm("هل تريد بدء سيرة جديدة؟ سيُحذف الملف المحفوظ في هذا المتصفح.")) return;
         data = blankData();
+        openSections.clear();
+        openSections.add("contact");
         refresh();
         message("بدأت سيرة جديدة.", false);
       });
