@@ -83,6 +83,10 @@
     .field input:focus, .field textarea:focus, select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
     .field input::placeholder, .field textarea::placeholder { color: #a79c93; }
     .field-hint { display: block; margin-top: 4px; color: var(--muted); font-size: 10px; }
+    .photo-controls { display: flex; align-items: center; gap: 10px; }
+    .photo-thumb { width: 56px; height: 56px; flex: 0 0 56px; object-fit: cover; border: 1px solid var(--line); border-radius: 9px; }
+    .photo-placeholder { display: grid; place-items: center; color: var(--muted); background: #f5f1ed; font-size: 21px; }
+    .photo-controls-info { min-width: 0; flex: 1; }
     .add-row { margin-top: 10px; }
     .add-section-card { padding: 15px 16px; }
     .section-chips { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 10px; }
@@ -204,20 +208,26 @@
       .cv-main { padding: 19px 16px; }
     }
     @media (max-width: 780px) {
-      .workspace { grid-template-columns: 1fr; }
-      .preview-panel { position: static; grid-row: 1; }
+      .workspace { grid-template-columns: minmax(0, 1fr); }
+      .preview-panel { position: static; grid-row: 2; }
       .cv-paper { max-width: 600px; margin: auto; }
-      .editor-panel { grid-row: 2; }
+      .editor-panel { grid-row: 1; }
     }
     @media (max-width: 480px) {
-      .topbar { min-height: 62px; padding-inline: 14px; }
+      .topbar { min-height: 62px; padding: 9px 12px; }
       .brand { font-size: 17px; }
       .top-actions { gap: 6px; }
-      .button { padding-inline: 10px; }
-      .intro { padding-top: 23px; }
-      .workspace { padding-inline: 12px; }
-      .preview-toolbar { align-items: flex-start; }
-      .preview-controls { flex-wrap: wrap; justify-content: flex-end; }
+      .button { min-height: 40px; padding-inline: 9px; }
+      .intro { padding: 21px 14px 16px; }
+      .workspace { width: 100%; padding: 0 10px 28px; gap: 18px; }
+      .card { padding: 12px; }
+      .section-heading { gap: 8px; }
+      .section-heading h3, .add-heading { font-size: 14px; }
+      .preview-toolbar { align-items: center; }
+      .preview-controls { flex-wrap: nowrap; justify-content: flex-start; }
+      .layout-select { max-width: 155px; }
+      .color-box { flex-wrap: wrap; gap: 8px; padding: 9px; }
+      .palette { flex-wrap: wrap; gap: 8px; }
       .download-text { display: none; }
       .paper-stage { padding: 7px; }
       .cv-paper { padding: 6px; min-height: 520px; }
@@ -236,6 +246,11 @@
       .cv-item-title { font-size: 10px; }
       .cv-item-meta, .cv-item-description, .cv-sidebar-contact li { font-size: 9px; }
       .cv-skill, .cv-language { font-size: 9px; }
+      .field-grid { grid-template-columns: minmax(0, 1fr); gap: 9px; }
+      .field-full { grid-column: auto; }
+      .photo-controls { flex-wrap: wrap; }
+      .photo-controls-info { flex-basis: calc(100% - 70px); }
+      .photo-controls .button { flex: 1 1 auto; }
     }
     @media print {
       @page { size: A4; margin: 0; }
@@ -273,7 +288,7 @@
     <div class="brand"><span class="brand-mark" aria-hidden="true">س</span><span>سيرة</span></div>
     <div class="top-actions">
       <button type="button" class="button" id="new-cv">＋ سيرة جديدة</button>
-      <button type="button" class="button button-primary" id="download-pdf" aria-label="تنزيل السيرة الذاتية بصيغة PDF" title="في نافذة الطباعة، اختر حفظ بصيغة PDF"> تنزيل بصيغة PDF <span class="download-text">تنزيل PDF</span></button>
+      <button type="button" class="button button-primary" id="download-pdf" aria-label="تنزيل السيرة الذاتية بصيغة PDF" title="في نافذة الطباعة، اختر حفظ بصيغة PDF"> تنزيل بصيغة PDF <span class="download-text"></span></button>
     </div>
   </header>
   <main>
@@ -336,7 +351,7 @@
   <script>
     (() => {
       "use strict";
-      const STORAGE_KEY = "sira-cv-ar-v3";
+      const STORAGE_KEY = "sira-cv-ar-v4";
       const order = ["contact", "profile", "education", "experience", "skills", "languages", "projects", "certificates", "volunteering", "interests", "references"];
       const sidebarThemes = ["#24354f", "#34383d", "#28534c", "#593b46", "#606a79", "#e9e5e1"];
       const sections = {
@@ -354,8 +369,8 @@
       };
       const labels = {
         name: "الاسم الكامل", headline: "المسمى المهني", email: "البريد الإلكتروني", phone: "رقم الهاتف",
-        city: "المدينة أو العنوان", website: "الموقع أو لينكدإن", summary: "نبذة قصيرة",
-        degree: "المؤهل أو التخصص", school: "المدرسة أو المؤسسة", start: "من", end: "إلى",
+        city: "المدينة أو العنوان", website: "موقع إلكتروني، إذا كان لديك واحد", summary: "نبذة قصيرة",
+        degree: "الشهادة التي حصلت عليها", school: "مدرسة أو جامعة أو معهد", start: "من", end: "إلى",
         title: "المسمى الوظيفي", organization: "الشركة أو المؤسسة", location: "الموقع",
         description: "التفاصيل أو ما تعلمته", skill: "المهارة", level: "المستوى (%)",
         language: "اللغة", project: "اسم المشروع", course: "الدورة أو الشهادة", issuer: "الجهة المانحة",
@@ -365,8 +380,8 @@
       const placeholders = {
         name: "مثال: مصطفى العمر", headline: "مثال: مدرس لغة إنجليزية", email: "name@example.com",
         phone: "مثال: 944123456", city: "مثال: منبج، سوريا", website: "https://mostafaaomar.github.io/cv/",
-        summary: "أنا شخص متحمس ومهتم بـ... أبحث عن فرصة أستطيع من خلالها...",
-        degree: "مثال: الثانوية العامة، الأحياء", school: "مثال: ثانوية في منبج",
+        summary: "...... أنا متحمس جداً للعمل كمعلم في مدرستكم، ولدي خبرة في مجال التدريس.",
+        degree: "مثال: الثانوية العامة، ادبي او علمي", school: "مثال: ثانوية في منبج",
         title: "مثال: مساعد مبيعات",
         organization: "مثال: مكتبة في منبج", location: "مثال: منبج، سوريا",
         description: "اكتب عن مسؤولياتك أو إنجازاتك أو ما تعلمته.",
@@ -380,12 +395,12 @@
       const makeEntry = () => ({ id: globalThis.crypto?.randomUUID?.() || `${Date.now()}-${Math.random().toString(36).slice(2)}` });
       function blankData() {
         const entries = Object.fromEntries(order.map(id => [id, [makeEntry()]]));
-        return { color: "#a97957", sidebar: "#24354f", layout: "auto", photo: "", sections: [...order.slice(0, 6)], entries };
+        return { color: "#a97957", sidebar: "#24354f", layout: "auto", photo: "", sections: ["contact"], entries };
       }
       function loadData() {
         try {
           const saved = localStorage.getItem(STORAGE_KEY);
-          const legacySaved = localStorage.getItem("sira-cv-ar-v2") || localStorage.getItem("cv-studio-data-v1");
+          const legacySaved = localStorage.getItem("sira-cv-ar-v3") || localStorage.getItem("sira-cv-ar-v2") || localStorage.getItem("cv-studio-data-v1");
           if (!saved && !legacySaved) return blankData();
           const raw = JSON.parse(saved || legacySaved);
           const result = blankData();
@@ -395,7 +410,7 @@
           if (["auto", "classic", "minimal"].includes(raw.layout)) result.layout = raw.layout;
           else if (raw.layout === "modern") result.layout = "classic";
           if (typeof raw.photo === "string") result.photo = raw.photo;
-          if (Array.isArray(raw.sections)) result.sections = raw.sections.filter((id, i, all) => sections[id] && all.indexOf(id) === i);
+          if (saved && Array.isArray(raw.sections)) result.sections = raw.sections.filter((id, i, all) => id !== "references" && sections[id] && all.indexOf(id) === i);
           if (raw.entries && typeof raw.entries === "object") for (const id of order) {
             if (!Array.isArray(raw.entries[id])) continue;
             result.entries[id] = raw.entries[id].filter(item => item && typeof item === "object").map(item => {
@@ -511,7 +526,7 @@
             ${id === "experience" ? `<p class="tip">${hasExperience() ? "أضف مسؤولياتك وإنجازاتك؛ والتعليم والمشاريع يكملان سيرتك." : "ليس لديك خبرة عمل بعد؟ لا بأس. قدّم التعليم والمهارات والمشاريع أو التطوع؛ فهي خبرات مهمة."}</p>` : ""}
           </section>`;
         }).join("");
-        document.getElementById("available-sections").innerHTML = order.filter(id => !data.sections.includes(id))
+        document.getElementById("available-sections").innerHTML = order.filter(id => id !== "references" && !data.sections.includes(id))
           .map(id => `<button type="button" class="chip" data-action="add-section" data-section="${id}">＋ ${sections[id].title}</button>`).join("")
           || `<span class="description">أضفت كل الأقسام المتاحة.</span>`;
       }
@@ -519,8 +534,8 @@
         const photo = data.photo
           ? `<img class="photo-thumb" src="${escapeHtml(data.photo)}" alt="معاينة الصورة الشخصية">`
           : `<span class="photo-thumb photo-placeholder" aria-hidden="true">＋</span>`;
-        return `<div class="entry" style="display:flex;align-items:center;gap:10px">
-          ${photo}<div style="flex:1"><strong style="font-size:11px">الصورة الشخصية</strong><p class="description">اختيارية · JPG أو PNG أو WebP · حتى ٥ ميغابايت</p></div>
+        return `<div class="entry photo-controls">
+          ${photo}<div class="photo-controls-info"><strong style="font-size:11px">الصورة الشخصية</strong><p class="description">اختيارية · JPG أو PNG أو WebP · حتى ٥ ميغابايت</p></div>
           <button type="button" class="button button-small" data-action="choose-photo">اختر صورة</button>
           ${data.photo ? `<button type="button" class="button button-small button-danger" data-action="remove-photo">حذف</button>` : ""}
         </div>`;
@@ -553,11 +568,11 @@
           return `<li class="cv-language"><span>${escapeHtml(entry.language)}</span>${percent === null ? "" : `<span class="cv-skill-level">${percent}%</span><span class="cv-bar"><span style="width:${percent}%"></span></span>`}</li>`;
         }
         if (id === "interests") return `<span class="cv-interest">${escapeHtml(entry.interest)}</span>`;
-        if (id === "references") {
-          const name = (entry.person || "").trim() || "متاح عند الطلب";
-          const meta = [entry.relationship, entry.contact].filter(Boolean).map(escapeHtml).join(" · ");
-          return `<li class="cv-entry"><p class="cv-item-title">${escapeHtml(name)}</p>${meta ? `<p class="cv-item-meta">${meta}</p>` : ""}</li>`;
-        }
+        // if (id === "references") {
+        //   const name = (entry.person || "").trim() || "متاح عند الطلب";
+        //   const meta = [entry.relationship, entry.contact].filter(Boolean).map(escapeHtml).join(" · ");
+        //   return `<li class="cv-entry"><p class="cv-item-title">${escapeHtml(name)}</p>${meta ? `<p class="cv-item-meta">${meta}</p>` : ""}</li>`;
+        // }
         const titleField = { education: "degree", experience: "title", projects: "project", certificates: "course", volunteering: "activity" }[id];
         const organizationField = { education: "school", experience: "organization", certificates: "issuer", volunteering: "organization" }[id];
         const title = (entry[titleField] || "").trim();
@@ -634,11 +649,9 @@
           paper.innerHTML = `<div class="empty-preview">ستظهر سيرتك هنا فور إدخال المعلومات.<br>لا تحتاج إلى تعبئة كل الأقسام.</div>`;
           return;
         }
-        const initials = (name || "س").trim().slice(0, 1);
-        const image = data.photo
-          ? `<img class="cv-photo" src="${escapeHtml(data.photo)}" alt="">`
-          : `<span class="cv-photo-placeholder" aria-hidden="true">${escapeHtml(initials)}</span>`;
-        const photo = contactVisible ? `<div class="cv-photo-wrap">${image}</div>` : "";
+        const photo = contactVisible && data.photo
+          ? `<div class="cv-photo-wrap"><img class="cv-photo" src="${escapeHtml(data.photo)}" alt=""></div>`
+          : "";
         const sidebar = `<aside class="cv-sidebar">${photo}${contactSection(contact)}${sideIds.map(id => cvSection(id)).join("")}</aside>`;
         const profileSection = profile ? `<section class="cv-section" data-cv-section="profile"><h2 class="cv-section-title">نبذة مهنية</h2><p class="cv-summary">${escapeHtml(profile)}</p></section>` : "";
         const header = name || headline ? `<header class="cv-header">${name ? `<h1 class="cv-name">${escapeHtml(name)}</h1>` : ""}${headline ? `<p class="cv-headline">${escapeHtml(headline)}</p>` : ""}</header>` : "";
